@@ -11,18 +11,26 @@ steps:
 
   # Step 3: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/brave-tea-431307-a2/hello-world-app', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/hello-world-app', '.']
 
   # Step 4: Push Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/brave-tea-431307-a2/hello-world-app']
+    args: ['push', 'gcr.io/$PROJECT_ID/hello-world-app']
 
-  # Step 5: Deploy to GKE
+  # Step 5: Get GKE credentials
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'container'
+      - 'clusters'
+      - 'get-credentials'
+      - 'cluster-1'
+      - '--zone=us-central1-a'
+      - '--project=$PROJECT_ID'
+
+  # Step 6: Deploy to GKE
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
       - '-f'
       - 'k8s/deployment.yaml'
-    env:
-      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=my-cluster'
