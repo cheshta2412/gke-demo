@@ -1,0 +1,28 @@
+steps:
+  # Step 1: Install dependencies
+  - name: 'python:3.8-slim'
+    entrypoint: 'pip'
+    args: ['install', '-r', 'requirements.txt']
+
+  # Step 2: Run tests (if you have any)
+  # - name: 'python:3.8-slim'
+  #   entrypoint: 'pytest'
+  #   args: ['tests/']
+
+  # Step 3: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/zinc-code-430014-k4/hello-world-app', '.']
+
+  # Step 4: Push Docker image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/zinc-code-430014-k4/hello-world-app']
+
+  # Step 5: Deploy to GKE
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'apply'
+      - '-f'
+      - 'k8s/deployment.yaml'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=my-cluster'
