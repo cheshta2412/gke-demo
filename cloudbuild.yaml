@@ -1,13 +1,18 @@
 steps:
-  # Step 1: Build Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/brave-tea-431-307-a2/hello-world-app:latest', '.']
+  # Step 1: Install dependencies
+  - name: 'python:3.8-slim'
+    entrypoint: 'pip'
+    args: ['install', '-r', 'requirements.txt']
 
-  # Step 2: Push Docker image to Google Container Registry
+  # Step 2: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/brave-tea-431-307-a2/hello-world-app:latest']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/brave-tea-431307-a2/my-repo/hello-world-app:latest', '.']
 
-  # Step 3: Deploy to GKE
+  # Step 3: Push Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/brave-tea-431307-a2/my-repo/hello-world-app:latest']
+
+  # Step 4: Deploy to GKE
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
@@ -26,6 +31,5 @@ steps:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
 
-options:
-  logsBucket: gs://demo-dke
+timeout: '1200s'
 
