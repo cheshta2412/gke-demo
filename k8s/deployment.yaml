@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: flask-app-deployment
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: flask-app
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: gcr.io/brave-tea-431307-a2/hello-world-app
+          image: gcr.io/brave-tea-431307-a2/hello-world-app:latest
           ports:
             - containerPort: 80
