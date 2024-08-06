@@ -1,7 +1,7 @@
 apiVersion: v1
-kind: flask-app-service
+kind: Service
 metadata:
-  name: kubernetes # Change this to a descriptive name if needed
+  name: flask-app-service # Change this to a descriptive name if needed
 spec:
   type: LoadBalancer
   selector:
