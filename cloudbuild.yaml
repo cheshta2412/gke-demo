@@ -1,18 +1,13 @@
 steps:
-  # Step 1: Install dependencies
-  - name: 'python:3.8-slim'
-    entrypoint: 'pip'
-    args: ['install', '-r', 'requirements.txt']
-
-  # Step 2: Build Docker image
+  # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/brave-tea-431307-a2/hello-world-app:latest', '.']
+    args: ['build', '-t', 'gcr.io/brave-tea-431-307-a2/hello-world-app:latest', '.']
 
-  # Step 3: Push Docker image to Google Container Registry
+  # Step 2: Push Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/brave-tea-431307-a2/hello-world-app:latest']
+    args: ['push', 'gcr.io/brave-tea-431-307-a2/hello-world-app:latest']
 
-  # Step 4: Deploy to GKE
+  # Step 3: Deploy to GKE
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
