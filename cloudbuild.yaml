@@ -4,33 +4,29 @@ steps:
     entrypoint: 'pip'
     args: ['install', '-r', 'requirements.txt']
 
-  # Step 2: Run tests (if you have any)
-  # - name: 'python:3.8-slim'
-  #   entrypoint: 'pytest'
-  #   args: ['tests/']
-
-  # Step 3: Build Docker image
+  # Step 2: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/brave-tea-431307-a2/hello-world-app', '.']
 
-  # Step 4: Push Docker image to Google Container Registry
+  # Step 3: Push Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/brave-tea-431307-a2/hello-world-app']
 
-  # Step 5: Get GKE credentials
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
-    args:
-      - 'container'
-      - 'clusters'
-      - 'get-credentials'
-      - 'cluster-1'
-      - '--zone=us-central1-a'
-      - '--project=brave-tea-431307-a2'
-
-  # Step 6: Deploy to GKE
+  # Step 4: Deploy to GKE
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
       - '-f'
       - 'k8s/deployment.yaml'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'apply'
+      - '-f'
+      - 'k8s/service.yaml'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
