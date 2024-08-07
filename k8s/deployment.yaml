@@ -17,5 +17,6 @@ spec:
         image: us-central1-docker.pkg.dev/brave-tea-431307-a2/my-repo/hello-world-app:latest
         ports:
         - containerPort: 80
+
       imagePullSecrets:
       - name: my-registry-key  # Optional: Use if you need to authenticate with Artifact Registry
